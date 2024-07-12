@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiz Coin Tapper</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black; /* Set background color to black */
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        .game-container {
+            text-align: center;
+            margin-top: 20px; /* Adjust margin as needed */
+            color: white; /* Set text color to white */
+        }
+        .coin {
+            position: relative; /* Ensure position context for absolute positioning */
+            width: 150px; /* Adjust size as needed */
+            height: 150px; /* Adjust size as needed */
+            cursor: pointer;
+        }
+        .score {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .timer {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Animation for tap effect */
+        @keyframes tapAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .coin.tapped {
+            animation: tapAnimation 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Wiz Coin Tapper</h1>
+        <img src="https://i.postimg.cc/cHv1Z8sr/Untitled2-20240711202636.png" alt="Wiz Coin" class="coin" onclick="tapCoin()">
+        <p class="score">Score: <span id="score">0</span></p>
+        <p class="timer">Time Left: <span id="timer">30</span> seconds</p>
+        <button class="button" onclick="startGame()">Start Game</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let gameInProgress = false;
+        let countdown;
+
+        function startGame() {
+            if (gameInProgress) {
+                alert("Game is already in progress. Finish the current game to start a new one.");
+                return;
+            }
+            
+            score = 0;
+            gameInProgress = true;
+            document.getElementById('score').innerText = score;
+            document.querySelector('.button').style.display = 'none';
+            
+            // Set game duration (30 seconds)
+            countdown = setInterval(updateTimer, 1000);
+            setTimeout(endGame, 30000);
+        }
+
+        function updateTimer() {
+            let timerElement = document.getElementById('timer');
+            let timeLeft = parseInt(timerElement.innerText);
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerElement.innerText = timeLeft;
+            }
+        }
+
+        function tapCoin() {
+            if (!gameInProgress) {
+                return;
+            }
+            
+            // Update score
+            score++;
+            document.getElementById('score').innerText = score;
+            
+            // Apply tap animation
+            let coin = document.querySelector('.coin');
+            coin.classList.add('tapped');
+            
+            setTimeout(function() {
+                coin.classList.remove('tapped');
+            }, 300); // Remove tapped class after 300ms
+        }
+
+        function endGame() {
+            clearInterval(countdown);
+            gameInProgress = false;
+            document.querySelector('.button').style.display = 'block';
+            alert(`Game Over! Your final score is ${score}.`);
+        }
+    </script>
+</body>
+</html>
